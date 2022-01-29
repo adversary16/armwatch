@@ -15,7 +15,7 @@ var httpConfig httpServer.ServerSettings
 
 func Init() {
 	// initialize internal storage
-	httpConfig.Port = 8123
+	httpConfig.Port = 8080
 	httpConfig.Routes = httpServer.RouteMap{
 		"/status": func(s string) (string, error) {
 			return strconv.Itoa(battery.Get()), nil
