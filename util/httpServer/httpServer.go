@@ -13,8 +13,8 @@ var host http.Server
 type RouteMap map[string]func(string) (string, error)
 
 type ServerSettings struct {
-	Port   int
-	Routes RouteMap
+	Port int
+	Host string
 }
 
 func basicReponse(data string) (string, error) {
@@ -43,11 +43,11 @@ func ParseRoutes(routeMap RouteMap) error {
 	return nil
 }
 
-func Init(config ServerSettings) *http.Server {
+func Init(config ServerSettings, routes RouteMap) *http.Server {
 	host = http.Server{}
-	ParseRoutes(config.Routes)
+	ParseRoutes(routes)
 	serveAdress := strings.Join([]string{
-		"localhost",
+		config.Host,
 		strconv.Itoa(config.Port),
 	}, ":")
 	log.Fatal(http.ListenAndServe(serveAdress, nil))

@@ -12,16 +12,17 @@ import (
 	"radiozi.ga/armwatch/util/routinify"
 )
 
-var configuration interface{}
+var configuration confParser.Configuration
 var httpConfig httpServer.ServerSettings
 
 func Init() {
-	// initialize internal storage
 
 	confParser.Init(&configuration)
-	fmt.Println(configuration)
-	httpConfig.Port = 8080
-	httpConfig.Routes = httpServer.RouteMap{
+
+	httpConf := configuration["http"].(map[string]interface{})
+	httpConfig.Port = int(httpConf["port"].(int64))
+
+	routes := httpServer.RouteMap{
 		"/status": func(s string) (string, error) {
 			return strconv.Itoa(battery.Get()), nil
 		},
@@ -30,7 +31,7 @@ func Init() {
 	repoize.Init()
 	// initialize data sources
 	battery.Init()
-	httpServer.Init(httpConfig)
+	httpServer.Init(httpConfig, routes)
 }
 
 func main() {

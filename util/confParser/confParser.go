@@ -12,12 +12,14 @@ import (
 	"github.com/BurntSushi/toml"
 )
 
+type Configuration map[string]interface{}
+
 var allowedExtensions = []string{
 	"toml",
 	"json",
 }
 
-func Parse(path *os.FileInfo, confPointer *interface{}) {
+func Parse(path *os.FileInfo, confPointer *Configuration) {
 	if *path == nil {
 		return
 	}
@@ -68,6 +70,6 @@ func FindConfFiles() *os.FileInfo {
 	return &confPath
 }
 
-func Init(confPointer *interface{}) {
+func Init(confPointer *Configuration) {
 	Parse(FindConfFiles(), confPointer)
 }
