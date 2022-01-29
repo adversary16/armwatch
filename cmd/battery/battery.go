@@ -1,6 +1,7 @@
 package battery
 
 import (
+	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -71,6 +72,7 @@ func UpdateCapacity() (int, error) {
 	if capacity != 0 {
 		currentCapacity = capacity
 	}
+	fmt.Println(capacity)
 	return capacity, nil
 }
 
