@@ -1,7 +1,12 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+
+	"radiozi.ga/armwatch/cmd/battery"
+)
 
 func main() {
-	fmt.Println("'hi there'")
+	battery.Init()
+	fmt.Println(battery.Get())
 }
