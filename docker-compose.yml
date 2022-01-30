@@ -4,3 +4,5 @@ services:
     build: .
     volumes:
       - /sys/class/power_supply:/sys/class/power_supply
+    ports:
+     - 8080:8080

@@ -8,8 +8,8 @@ RUN apk --no-cache add ca-certificates
 WORKDIR /app
 COPY --from=builder /go/src/adversary16/armwatch/armwatch ./
 COPY --from=builder /go/src/adversary16/armwatch/conf* ./
-RUN ls
 RUN chmod +x ./armwatch
 RUN echo ./armwatch > entrypoint.sh
-ENTRYPOINT ["sh ./entrypoint.sh"]
+RUN chmod +x ./entrypoint.sh
+CMD [ "sh", "./entrypoint.sh" ]
 
