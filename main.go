@@ -22,7 +22,6 @@ var wsRoutes = ws.WSRouteMap{
 func Init() {
 
 	confParser.Init(&configuration)
-
 	httpConf := configuration["http"].(map[string]interface{})
 	httpConfig.Port = int(httpConf["port"].(int64))
 
