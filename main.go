@@ -21,7 +21,6 @@ var wsRoutes = ws.WSRouteMap{
 
 func Init(wg *sync.WaitGroup) {
 	confParser.Init(&configuration)
-
 	httpConf := configuration["http"].(map[string]interface{})
 	httpConfig.Port = int(httpConf["port"].(int64))
 
