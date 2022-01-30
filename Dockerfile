@@ -11,5 +11,5 @@ COPY --from=builder /go/src/adversary16/armwatch/conf* ./
 RUN ls
 RUN chmod +x ./armwatch
 RUN echo ./armwatch > entrypoint.sh
-ENTRYPOINT ["sh entrypoint.sh"]
+ENTRYPOINT ["sh ./entrypoint.sh"]
 
