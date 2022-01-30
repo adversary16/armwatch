@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"sync"
 )
 
 var host http.Server
@@ -35,13 +36,14 @@ func ParseRoutes(routeMap RouteMap) error {
 	return nil
 }
 
-func Init(config ServerSettings, routes RouteMap) *http.Server {
+func Init(config ServerSettings, routes RouteMap, wg *sync.WaitGroup) {
 	host = http.Server{}
 	ParseRoutes(routes)
 	serveAdress := strings.Join([]string{
 		config.Host,
 		strconv.Itoa(config.Port),
 	}, ":")
-	log.Fatal(http.ListenAndServe(serveAdress, nil))
-	return &host
+	go func() {
+		log.Fatal(http.ListenAndServe(serveAdress, nil))
+	}()
 }

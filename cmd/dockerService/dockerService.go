@@ -17,7 +17,7 @@ type ContainerDTO struct {
 
 func List() []ContainerDTO {
 	var containerList []ContainerDTO
-	cli, err := client.NewEnvClient()
+	cli, err := client.NewClientWithOpts()
 	if err != nil {
 		log.Println(err)
 	} else {

@@ -19,30 +19,30 @@ var wsRoutes = ws.WSRouteMap{
 	"status": StatusController,
 }
 
-func Init() {
-
+func Init(wg *sync.WaitGroup) {
 	confParser.Init(&configuration)
+
 	httpConf := configuration["http"].(map[string]interface{})
 	httpConfig.Port = int(httpConf["port"].(int64))
 
 	routes := httpServer.RouteMap{
 		"/socket": ws.Controller(wsRoutes),
 	}
-
 	repoize.Init()
 	// initialize data sources
+
 	battery.Init()
-	httpServer.Init(httpConfig, routes)
+	wg.Add(1)
+	httpServer.Init(httpConfig, routes, wg)
 }
 
 func main() {
-	var wg sync.WaitGroup
-	Init()
-
+	wg := new(sync.WaitGroup)
+	Init(wg)
 	routinify.Add([]func() (int, error){
 		battery.UpdateCapacity,
-	}, &wg, 1000)
+	}, 1000)
 
-	wg.Wait()
 	fmt.Println("over")
+	wg.Wait()
 }
