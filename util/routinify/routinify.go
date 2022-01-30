@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-func Add(stack []func() (int, error), updateCycleMsec int) {
+func Add(stack []func() (int, error), updateCycleMsec int) func() {
 	updateCycle := time.Duration(updateCycleMsec * int(time.Millisecond))
 	cycleTicker := time.NewTicker(updateCycle)
 	for _, i := range stack {
@@ -21,4 +21,5 @@ func Add(stack []func() (int, error), updateCycleMsec int) {
 			}
 		}
 	}
+	return cycleTicker.Stop
 }
