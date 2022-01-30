@@ -10,7 +10,7 @@ import (
 
 var host http.Server
 
-type RouteMap map[string]func(string) (string, error)
+type RouteMap map[string]func(w http.ResponseWriter, r *http.Request)
 
 type ServerSettings struct {
 	Port int
@@ -22,22 +22,14 @@ func basicReponse(data string) (string, error) {
 	return data, nil
 }
 
-var predefinedRoutes = RouteMap{
-	"/": basicReponse,
-}
+var predefinedRoutes = RouteMap{}
 
 func ParseRoutes(routeMap RouteMap) error {
 	for k, v := range routeMap {
 		predefinedRoutes[k] = v
 	}
 	for path, handleFunc := range predefinedRoutes {
-		http.HandleFunc(path, func(w http.ResponseWriter, r *http.Request) {
-			result, err := handleFunc(r.URL.Path)
-			if err != nil {
-				log.Fatal(err)
-			}
-			fmt.Fprint(w, result)
-		})
+		http.HandleFunc(path, handleFunc)
 	}
 	fmt.Println(len(predefinedRoutes), "routes initialized")
 	return nil

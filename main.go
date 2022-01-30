@@ -2,10 +2,10 @@ package main
 
 import (
 	"fmt"
-	"strconv"
 	"sync"
 
 	"radiozi.ga/armwatch/cmd/battery"
+	"radiozi.ga/armwatch/ui/ws"
 	"radiozi.ga/armwatch/util/confParser"
 	"radiozi.ga/armwatch/util/httpServer"
 	"radiozi.ga/armwatch/util/repoize"
@@ -15,6 +15,10 @@ import (
 var configuration confParser.Configuration
 var httpConfig httpServer.ServerSettings
 
+var wsRoutes = ws.WSRouteMap{
+	"status": StatusController,
+}
+
 func Init() {
 
 	confParser.Init(&configuration)
@@ -23,9 +27,7 @@ func Init() {
 	httpConfig.Port = int(httpConf["port"].(int64))
 
 	routes := httpServer.RouteMap{
-		"/status": func(s string) (string, error) {
-			return strconv.Itoa(battery.Get()), nil
-		},
+		"/socket": ws.Controller(wsRoutes),
 	}
 
 	repoize.Init()

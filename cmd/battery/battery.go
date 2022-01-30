@@ -63,7 +63,7 @@ func UpdateCapacity() (int, error) {
 		return capacity, nil
 	}
 
-	capacity, err = strconv.Atoi(string(raw[0:2]))
+	capacity, err = strconv.Atoi(string(raw[0 : len(raw)-1]))
 
 	if err != nil {
 		return capacity, err

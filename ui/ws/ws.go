@@ -1,17 +1,41 @@
 package ws
 
-import "net/http"
+import (
+	"log"
+	"net/http"
+	"time"
 
-var host http.Server
-var routes map[string]func()
+	"github.com/gorilla/websocket"
+)
 
-func ParseRoutes() error {
-	// http.HandleFunc()
-	return nil
+type WSRouteController func([]byte, func(interface{}) error)
+type WSRouteMap map[string]WSRouteController
+
+const (
+	pingPeriod = 1 * time.Second
+	writeWait  = 2 * time.Second
+)
+
+func CheckOrigin(r *http.Request) bool {
+	return true
 }
 
-func Init() *http.Server {
-	host = http.Server{}
-	host.ListenAndServe()
-	return &host
+var upgrader = websocket.Upgrader{
+	ReadBufferSize:  1024,
+	WriteBufferSize: 1024,
+	CheckOrigin:     CheckOrigin,
+}
+
+func Controller(routeMap WSRouteMap) func(http.ResponseWriter, *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		conn, err := upgrader.Upgrade(w, r, nil)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+		client := &Client{conn: conn, send: make(chan []byte, 256), routes: routeMap}
+
+		go client.writer()
+		go client.reader()
+	}
 }
