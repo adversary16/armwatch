@@ -51,14 +51,15 @@ func (c *Client) reader() {
 		_, message, err := c.conn.ReadMessage()
 
 		if err != nil {
-			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
+			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) || websocket.IsCloseError(err, websocket.CloseAbnormalClosure) {
 				log.Println("user disconnected")
-				break
 			}
+			break
 		}
 		err = json.Unmarshal(message, &parsed)
 		if err != nil {
 			log.Println(err)
+			break
 		}
 
 		handler, ok := c.routes[parsed.Type]
