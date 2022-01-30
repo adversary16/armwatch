@@ -4,5 +4,6 @@ services:
     build: .
     volumes:
       - /sys/class/power_supply:/sys/class/power_supply
+      - /var/run/docker.sock:/var/run/docker.sock 
     ports:
      - 8080:8080
