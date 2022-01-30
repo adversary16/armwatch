@@ -23,7 +23,7 @@ func (c *Client) writer() {
 	ticker := time.NewTicker(pingPeriod)
 	defer func() {
 		ticker.Stop()
-		// c.conn.Close()
+		c.conn.Close()
 	}()
 
 	for {
@@ -51,7 +51,10 @@ func (c *Client) reader() {
 		_, message, err := c.conn.ReadMessage()
 
 		if err != nil {
-			log.Println(err)
+			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
+				log.Println("user disconnected")
+				break
+			}
 		}
 		err = json.Unmarshal(message, &parsed)
 		if err != nil {
