@@ -11,7 +11,8 @@ type StatusRequest struct {
 }
 
 type StatusResponse struct {
-	BatteryCharge int
+	BatteryCharge     int
+	RunningContainers map[string]string
 }
 
 func StatusController(b []byte, jsonResponder func(interface{}) error) {

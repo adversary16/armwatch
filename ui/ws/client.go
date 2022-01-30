@@ -65,7 +65,7 @@ func (c *Client) reader() {
 		if ok {
 			handler(message, c.conn.WriteJSON)
 		} else {
-			fmt.Println("No handler")
+			fmt.Println("Uknown message")
 		}
 	}
 }
